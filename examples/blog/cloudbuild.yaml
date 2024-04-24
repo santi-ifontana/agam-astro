@@ -14,7 +14,6 @@ steps:
         mv $_ENV_FILE_PROD .env
       else
           echo "Env value not defined. Error"
-          exit 1
       fi
     automapSubstitutions: true
         
@@ -30,4 +29,4 @@ steps:
 
   # Copy the build into GCP bucket
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    args: ["gsutil", "-m", "rsync", "-r", "-c", "-d", "./build/", "gs://TBD"]
+    args: ["gsutil", "-m", "rsync", "-r", "-c", "-d", "./build/", ${BRANCH_NAME}]
