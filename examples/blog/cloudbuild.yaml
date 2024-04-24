@@ -20,17 +20,17 @@ steps:
   # Yarn install
   - name: 'node'
     entrypoint: 'yarn'
-		dir: 'examples/blog'
     args: ['install']
+    dir: 'examples/blog'
 
   # Yarn run build
   - name: 'node'
     entrypoint: 'yarn'
-		dir: 'examples/blog'
     args: ['run', 'build']
+    dir: 'examples/blog'
 
   # Copy the build into GCP bucket
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-	  dir: 'examples/blog'
-    args: ["gsutil", "-m", "rsync", "-r", "-c", "-d", "./build/", ${BRANCH_NAME}]
-		automapSubstitutions: true
+    args: ["gsutil", "-m", "rsync", "-r", "-c", "-d", "./build/", "${_BUCKET}"]
+    dir: 'examples/blog'
+    automapSubstitutions: true
