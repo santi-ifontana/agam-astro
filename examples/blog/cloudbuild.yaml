@@ -1,0 +1,33 @@
+steps:
+  # Branch name conditional
+  - name: 'bash'
+    script: |
+      #!/usr/bin/env bash
+
+      if [[ $PROJECT_ID == *uat ]]; then
+        echo "UAT env file configured"
+        mv $_ENV_FILE_UAT .env
+        ls -lah
+        cat .env
+      elif [[ $PROJECT_ID == *prod ]]; then
+        echo "PROD env file configured"
+        mv $_ENV_FILE_PROD .env
+      else
+          echo "Env value not defined. Error"
+          exit 1
+      fi
+    automapSubstitutions: true
+        
+  # Yarn install
+  - name: 'node'
+    entrypoint: 'yarn'
+    args: ['install']
+
+  # Yarn run build
+  - name: 'node'
+    entrypoint: 'yarn'
+    args: ['run', 'build']
+
+  # Copy the build into GCP bucket
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args: ["gsutil", "-m", "rsync", "-r", "-c", "-d", "./build/", "gs://TBD"]
